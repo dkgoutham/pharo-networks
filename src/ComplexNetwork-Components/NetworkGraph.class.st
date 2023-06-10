@@ -12,6 +12,12 @@ Class {
 	#category : #'ComplexNetwork-Components'
 }
 
+{ #category : #testing }
+NetworkGraph class >> isAbstract [
+
+	^ self = AIGraphAlgorithm
+]
+
 { #category : #private }
 NetworkGraph >> addEdge: edgeModel from: sourceBlock to: targetBlock [
 

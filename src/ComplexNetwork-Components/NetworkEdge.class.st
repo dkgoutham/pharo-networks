@@ -12,6 +12,23 @@ Class {
 	#category : #'ComplexNetwork-Components'
 }
 
+{ #category : #'instance creation' }
+NetworkEdge class >> with: aModel [
+
+	^ self new model: aModel
+]
+
+{ #category : #'instance creation' }
+NetworkEdge class >> with: aModel from: srcNode to: dstNode [
+
+	| edge |
+	edge := self new.
+	edge model: aModel.
+	edge from: srcNode.
+	edge to: dstNode.
+	^ edge
+]
+
 { #category : #accessing }
 NetworkEdge >> asTuple [
 

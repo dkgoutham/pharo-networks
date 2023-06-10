@@ -6,10 +6,17 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'model',
-		'adjacentNodes'
+		'adjacentNodes',
+		'attributes'
 	],
 	#category : #'ComplexNetwork-Components'
 }
+
+{ #category : #'instance creation' }
+NetworkNode class >> with: aModel [
+
+	^ self new model: aModel
+]
 
 { #category : #accessing }
 NetworkNode >> adjacentNodes [
@@ -35,7 +42,8 @@ NetworkNode >> from: sourceNode edge: anEdge [
 NetworkNode >> initialize [
 
 	super initialize.
-	adjacentNodes := OrderedCollection new
+	adjacentNodes := OrderedCollection new.
+	attributes := OrderedCollection new.
 ]
 
 { #category : #accessing }
