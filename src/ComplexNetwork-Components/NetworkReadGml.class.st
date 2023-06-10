@@ -2,13 +2,13 @@
 A class that creates network by reading from a file.
 "
 Class {
-	#name : #NetworkRead,
+	#name : #NetworkReadGml,
 	#superclass : #Object,
 	#category : #'ComplexNetwork-Components'
 }
 
 { #category : #'as yet unclassified' }
-NetworkRead >> readFromUrl: url [
+NetworkReadGml >> readFromUrl: url [
 
 	| graph fileStream |
 	graph := NetworkGraph new.
@@ -36,18 +36,20 @@ NetworkRead >> readFromUrl: url [
 				cr.
 			[ parts first = ']' ] whileFalse: [
 				line := fileStream nextLine.
-				parts := line split: ' ' ] ].
+				line := line trim.
+				parts := self stringSplitSpace: line ] ].
 		parts first = 'edge' ifTrue: [
 			Transcript
 				show: 'edge';
 				cr.
 			[ parts first = ']' ] whileFalse: [
 				line := fileStream nextLine.
-				parts := line split: ' ' ] ] ]
+				line := line trim.
+				parts := self stringSplitSpace: line ] ] ]
 ]
 
 { #category : #'as yet unclassified' }
-NetworkRead >> stringSplitSpace: aString [
+NetworkReadGml >> stringSplitSpace: aString [
 
 	| parts last |
 	parts := OrderedCollection new.

@@ -7,15 +7,35 @@ Class {
 	#instVars : [
 		'model',
 		'adjacentNodes',
-		'attributes'
+		'adjacentEdges',
+		'attributes',
+		'id'
 	],
 	#category : #'ComplexNetwork-Components'
 }
 
 { #category : #'instance creation' }
-NetworkNode class >> with: aModel [
+NetworkNode class >> with: anId [
 
-	^ self new model: aModel
+	^ self new id: anId
+]
+
+{ #category : #adding }
+NetworkNode >> addAttribute: anAttributeObject [
+
+	attributes add: anAttributeObject
+]
+
+{ #category : #accessing }
+NetworkNode >> adjacentEdges [
+
+	^ adjacentEdges
+]
+
+{ #category : #accessing }
+NetworkNode >> adjacentEdges: aEdgeList [
+
+	adjacentEdges := aEdgeList
 ]
 
 { #category : #accessing }
@@ -36,6 +56,18 @@ NetworkNode >> from: sourceNode [
 
 { #category : #accessing }
 NetworkNode >> from: sourceNode edge: anEdge [
+]
+
+{ #category : #accessing }
+NetworkNode >> id [
+
+	^ id
+]
+
+{ #category : #accessing }
+NetworkNode >> id: aId [
+
+	id := aId
 ]
 
 { #category : #initialization }
@@ -79,4 +111,7 @@ NetworkNode >> to: targetNode [
 
 { #category : #accessing }
 NetworkNode >> to: targetNode edge: anEdge [
+
+	adjacentNodes add: targetNode.
+	adjacentEdges add: anEdge
 ]

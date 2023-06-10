@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'nodes',
 		'edges',
-		'sortingBlock'
+		'sortingBlock',
+		'directed'
 	],
 	#category : #'ComplexNetwork-Components'
 }
@@ -40,11 +41,11 @@ NetworkGraph >> addEdge: edgeModel from: sourceBlock to: targetBlock [
 ]
 
 { #category : #'building - graph' }
-NetworkGraph >> addNodeFor: aModel [
+NetworkGraph >> addNodeFor: anId [
 
 	^ self
-		  findNode: aModel
-		  ifAbsent: [ nodes add: (self nodeClass with: aModel) ]
+		  findNode: anId
+		  ifAbsent: [ nodes add: (self nodeClass with: anId) ]
 ]
 
 { #category : #'building - graph' }
@@ -86,7 +87,7 @@ NetworkGraph >> addNodesFromDifferentGraph: aNodeList [
 { #category : #configuration }
 NetworkGraph >> edgeClass [
 
-	^ nil
+	^ NetworkEdge.
 ]
 
 { #category : #accessing }
@@ -161,30 +162,27 @@ NetworkGraph >> findEdge: aModel [
 ]
 
 { #category : #accessing }
-NetworkGraph >> findNode: aModel [
-
+NetworkGraph >> findNode: anId [
 	"^ nodes findBinary: (self findBinaryBlock: aModel)."
 
-	^ nodes detect: [ :node | node model = aModel ]
+	^ nodes detect: [ :node | node id = anId ]
 ]
 
 { #category : #accessing }
-NetworkGraph >> findNode: aModel ifAbsent: aBlock [
-
+NetworkGraph >> findNode: anId ifAbsent: aBlock [
 	"^ nodes findBinary: (self findBinaryBlock: aModel) ifNone: aBlock"
 
-	^ nodes detect: [ :node | node model = aModel ] ifNone: aBlock
+	^ nodes detect: [ :node | node id = anId ] ifNone: aBlock
 ]
 
 { #category : #accessing }
-NetworkGraph >> findNode: aModel ifFound: aBlock [
-
+NetworkGraph >> findNode: anId ifFound: aBlock [
 	"^ nodes
 		  findBinary: (self findBinaryBlock: aModel)
 		  do: aBlock
 		  ifNone: [  ]"
 
-	^ nodes detect: [ :aNode | aNode model = aModel ] ifFound: aBlock
+	^ nodes detect: [ :aNode | aNode id = anId ] ifFound: aBlock
 ]
 
 { #category : #accessing }
@@ -198,13 +196,14 @@ NetworkGraph >> initialize [
 
 	sortingBlock := [ :a :b | a model hash <= b model hash ].
 	nodes := SortedCollection sortUsing: sortingBlock.
-	edges := SortedCollection sortUsing: sortingBlock
+	edges := SortedCollection sortUsing: sortingBlock.
+	directed := false
 ]
 
 { #category : #configuration }
 NetworkGraph >> nodeClass [
 
-	^ AIGraphNode
+	^ NetworkNode
 ]
 
 { #category : #accessing }

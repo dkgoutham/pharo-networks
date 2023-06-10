@@ -7,7 +7,9 @@ Class {
 	#instVars : [
 		'model',
 		'from',
-		'to'
+		'to',
+		'weight',
+		'attributes'
 	],
 	#category : #'ComplexNetwork-Components'
 }
@@ -27,6 +29,12 @@ NetworkEdge class >> with: aModel from: srcNode to: dstNode [
 	edge from: srcNode.
 	edge to: dstNode.
 	^ edge
+]
+
+{ #category : #adding }
+NetworkEdge >> addAttribute: anAttributeObject [
+
+	attributes add: anAttributeObject
 ]
 
 { #category : #accessing }
