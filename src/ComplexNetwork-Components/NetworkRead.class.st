@@ -18,13 +18,18 @@ NetworkRead >> readFromUrl: url [
 
 	[ fileStream atEnd ] whileFalse: [
 		| line parts |
-		Transcript show: 'entered';cr.
+		Transcript
+			show: 'entered';
+			cr.
 		line := fileStream nextLine.
-		line:= line trim.
-		line:= line asString.
-		Transcript show: line;cr.
-		parts := line split: ' '.
-		Transcript show: parts size;cr.
+		line := line trim.
+		"Transcript show: line;cr."
+		"parts := line split: ' '."
+		parts := self stringSplitSpace: line.
+		Transcript
+			show: parts size;
+			cr.
+
 		parts first = 'node' ifTrue: [ "Create node"
 			Transcript
 				show: 'node';
