@@ -8,7 +8,6 @@ Class {
 		'model',
 		'from',
 		'to',
-		'weight',
 		'attributes'
 	],
 	#category : #'ComplexNetwork-Components'
