@@ -40,3 +40,18 @@ NetworkRead >> readFromUrl: url [
 				line := fileStream nextLine.
 				parts := line split: ' ' ] ] ]
 ]
+
+{ #category : #'as yet unclassified' }
+NetworkRead >> stringSplitSpace: aString [
+
+	| parts last |
+	parts := OrderedCollection new.
+	last := 1.
+	aString withIndexDo: [ :element :index |
+		element = Character space ifTrue: [
+			parts add: (aString copyFrom: last to: index - 1).
+			last := index + 1 ] ].
+	last > aString size ifFalse: [
+		parts add: (aString copyFrom: last to: aString size) ].
+	^ parts
+]
