@@ -1,6 +1,14 @@
+"
+A class to represent network edge.
+"
 Class {
 	#name : #NetworkEdge,
 	#superclass : #Object,
+	#instVars : [
+		'model',
+		'from',
+		'to'
+	],
 	#category : #'ComplexNetwork-Components'
 }
 

@@ -1,6 +1,13 @@
+"
+A class to represent a network node.
+"
 Class {
 	#name : #NetworkNode,
 	#superclass : #Object,
+	#instVars : [
+		'model',
+		'adjacentNodes'
+	],
 	#category : #'ComplexNetwork-Components'
 }
 
