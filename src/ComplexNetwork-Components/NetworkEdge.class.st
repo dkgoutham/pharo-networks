@@ -5,7 +5,6 @@ Class {
 	#name : #NetworkEdge,
 	#superclass : #Object,
 	#instVars : [
-		'model',
 		'from',
 		'to',
 		'attributes'
@@ -25,6 +24,16 @@ NetworkEdge class >> with: aModel from: srcNode to: dstNode [
 	| edge |
 	edge := self new.
 	edge model: aModel.
+	edge from: srcNode.
+	edge to: dstNode.
+	^ edge
+]
+
+{ #category : #'instance creation' }
+NetworkEdge class >> with:srcNode to: dstNode [
+
+	| edge |
+	edge := self new.
 	edge from: srcNode.
 	edge to: dstNode.
 	^ edge
@@ -54,16 +63,10 @@ NetworkEdge >> from: anObject [
 	from := anObject
 ]
 
-{ #category : #accessing }
-NetworkEdge >> model [
+{ #category : #initialization }
+NetworkEdge >> initialize [
 
-	^ model
-]
-
-{ #category : #accessing }
-NetworkEdge >> model: aModel [
-
-	model := aModel
+	attributes := OrderedCollection new
 ]
 
 { #category : #printing }

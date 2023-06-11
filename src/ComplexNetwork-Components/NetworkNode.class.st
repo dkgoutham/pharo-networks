@@ -5,11 +5,10 @@ Class {
 	#name : #NetworkNode,
 	#superclass : #Object,
 	#instVars : [
-		'model',
+		'id',
 		'adjacentNodes',
 		'adjacentEdges',
-		'attributes',
-		'id'
+		'attributes'
 	],
 	#category : #'ComplexNetwork-Components'
 }
@@ -76,6 +75,7 @@ NetworkNode >> initialize [
 	super initialize.
 	adjacentNodes := OrderedCollection new.
 	attributes := OrderedCollection new.
+	adjacentEdges := OrderedCollection new.
 ]
 
 { #category : #accessing }
@@ -84,23 +84,11 @@ NetworkNode >> label [
 	^ 'Node: '
 ]
 
-{ #category : #accessing }
-NetworkNode >> model [
-
-	^ model
-]
-
-{ #category : #accessing }
-NetworkNode >> model: aModel [
-
-	model := aModel
-]
-
 { #category : #printing }
 NetworkNode >> printOn: stream [
 
 	stream nextPutAll: self label.
-	model printOn: stream
+	id printOn: stream
 ]
 
 { #category : #accessing }

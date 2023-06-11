@@ -97,7 +97,8 @@ NetworkReadGml >> readFromUrl: url [
 		parts first = 'node' ifTrue: [ "Create node"
 			self createNode: fileStream graph: graph ].
 		parts first = 'edge' ifTrue: [ "Create edge"
-			self createEdge: fileStream graph: graph ] ]
+			self createEdge: fileStream graph: graph ] ].
+	^ graph
 ]
 
 { #category : #'as yet unclassified' }
