@@ -44,28 +44,6 @@ NetworkGraph >> addDirectedEdge: fromId to: toId [
 			  edge ]
 ]
 
-{ #category : #adding }
-NetworkGraph >> addEdge: fromId to: toId [
-
-	| edge sourceNode targetNode |
-	sourceNode := self findNode: fromId ifAbsent: [ ^ nil ].
-	targetNode := self findNode: toId ifAbsent: [ ^ nil ].
-
-	^ self edgeClass
-		  ifNil: [
-			  sourceNode to: targetNode.
-			  targetNode from: sourceNode.
-			  nil ]
-		  ifNotNil: [
-			  edge := self edgeClass new.
-			  edge from: sourceNode.
-			  edge to: targetNode.
-			  sourceNode to: targetNode edge: edge.
-			  targetNode from: sourceNode edge: edge.
-			  self edges add: edge.
-			  edge ]
-]
-
 { #category : #'building - graph' }
 NetworkGraph >> addNodeFor: anId [
 

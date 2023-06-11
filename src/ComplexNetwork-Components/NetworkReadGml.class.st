@@ -87,17 +87,13 @@ NetworkReadGml >> readFromUrl: url [
 
 	[ fileStream atEnd ] whileFalse: [
 		| line parts |
-		Transcript
-			show: 'entered';
-			cr.
 		line := fileStream nextLine.
 		line := line trim.
 		"Transcript show: line;cr."
 		"parts := line split: ' '."
 		parts := self stringSplitSpace: line.
-		Transcript
-			show: parts size;
-			cr.
+		parts first = 'directed' ifTrue: [
+			graph directed: parts second = '1' ].
 
 		parts first = 'node' ifTrue: [ "Create node"
 			self createNode: fileStream graph: graph ].
