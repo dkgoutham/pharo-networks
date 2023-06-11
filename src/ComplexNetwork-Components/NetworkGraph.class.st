@@ -216,9 +216,9 @@ NetworkGraph >> graph [
 { #category : #initialization }
 NetworkGraph >> initialize [
 
-	sortingBlock := [ :a :b | a model hash <= b model hash ].
+	sortingBlock := [ :a :b | a id hash <= b id hash ].
 	nodes := SortedCollection sortUsing: sortingBlock.
-	edges := SortedCollection sortUsing: sortingBlock.
+	edges := OrderedCollection new.
 	directed := false
 ]
 
