@@ -28,8 +28,13 @@ NetworkReadGml >> createEdge: fileStream graph: aGraph [
 
 	targetId := parts second.
 
-	aGraph addEdge: sourceId to: targetId.
-	curEdge := aGraph edges last.
+	aGraph directed ifTrue: [
+		aGraph addDirectedEdge: sourceId to: targetId.
+		curEdge := aGraph edges last ].
+	
+	aGraph directed ifFalse: [
+		aGraph addUndirectedEdge: sourceId to: targetId.
+		curEdge := aGraph edges last ].
 
 	line := fileStream nextLine.
 	line := line trim.

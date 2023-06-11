@@ -19,23 +19,27 @@ NetworkGraph class >> isAbstract [
 	^ self = AIGraphAlgorithm
 ]
 
-{ #category : #private }
-NetworkGraph >> addEdge: edgeModel from: sourceBlock to: targetBlock [
+{ #category : #adding }
+NetworkGraph >> addDirectedEdge: fromId to: toId [
 
 	| edge sourceNode targetNode |
-	sourceNode := self findNode: (sourceBlock value: edgeModel) ifAbsent: [ ^ nil ].
-	targetNode := self findNode: (targetBlock value: edgeModel) ifAbsent: [ ^ nil ].
+	sourceNode := self findNode: fromId ifAbsent: [ ^ nil ].
+	targetNode := self findNode: toId ifAbsent: [ ^ nil ].
+
 	^ self edgeClass
 		  ifNil: [
 			  sourceNode to: targetNode.
 			  targetNode from: sourceNode.
 			  nil ]
 		  ifNotNil: [
-			  edge := self edgeClass with: edgeModel.
-			  sourceNode to: targetNode edge: edge.
-			  targetNode from: sourceNode edge: edge.
+			  edge := self edgeClass new.
+			  edge model: {
+					  sourceNode.
+					  targetNode }.
 			  edge from: sourceNode.
 			  edge to: targetNode.
+			  sourceNode to: targetNode edge: edge.
+			  targetNode from: sourceNode edge: edge.
 			  self edges add: edge.
 			  edge ]
 ]
@@ -70,46 +74,48 @@ NetworkGraph >> addNodeFor: anId [
 		  ifAbsent: [ nodes add: (self nodeClass with: anId) ]
 ]
 
-{ #category : #'building - graph' }
-NetworkGraph >> addNodesFrom: model childrenBlock: childrenBlock [
+{ #category : #adding }
+NetworkGraph >> addUndirectedEdge: fromId to: toId [
 
-	"recursively add nodes from the model"
+	| edge sourceNode targetNode |
+	sourceNode := self findNode: fromId ifAbsent: [ ^ nil ].
+	targetNode := self findNode: toId ifAbsent: [ ^ nil ].
 
-	| parent |
-	model ifNil: [ ^ self ].
-
-	self
-		findNode: model
-		ifFound: [
-		^ self "Prevent cycles. Do not add a node already added." ].
-
-	parent := self addNodeFor: model.
-	(childrenBlock value: model) do: [ :child |
-		self addNodesFrom: child childrenBlock: childrenBlock.
-		self
-			addEdge: { parent model. child }
-			from: [ :each | each first ]
-			to: [ :each | each second ] ]
+	^ self edgeClass
+		  ifNil: [
+			  sourceNode to: targetNode.
+			  targetNode from: sourceNode.
+			  nil ]
+		  ifNotNil: [
+			  edge := self edgeClass new.
+			  edge model: {
+					  sourceNode.
+					  targetNode }.
+			  edge node1: sourceNode.
+			  edge node2: targetNode.
+			  sourceNode to: targetNode edge: edge.
+			  targetNode to: sourceNode edge: edge.
+			  self edges add: edge.
+			  edge ]
 ]
 
-{ #category : #'building - graph' }
-NetworkGraph >> addNodesFromDifferentGraph: aNodeList [
+{ #category : #accessing }
+NetworkGraph >> directed [
 
-	"Adds nodes from another graph. This is useful for example when you want to add all the nodes, and its adjacencies, from one graph to another. For example, first running a graph reducing algo and then do a topological sort. First create the graph reduced graph and then add its nodes to a topological sort graph. "
+	^ directed
+]
 
-	aNodeList do: [ :node | self addNodeFor: node model ].
-	aNodeList do: [ :node |
-		node adjacentNodes do: [ :next |
-			self
-				addEdge: node model -> next model
-				from: [ :each | each key ]
-				to: [ :each | each value ] ] ]
+{ #category : #accessing }
+NetworkGraph >> directed: aBoolean [
+
+	directed := aBoolean
 ]
 
 { #category : #configuration }
 NetworkGraph >> edgeClass [
 
-	^ NetworkEdge.
+	directed ifTrue: [ ^ NetworkDirectedEdge ].
+	^ NetworkUndirectedEdge
 ]
 
 { #category : #accessing }
@@ -119,60 +125,10 @@ NetworkGraph >> edges [
 ]
 
 { #category : #'building - graph' }
-NetworkGraph >> edges: aCollection from: source to: target [
-
-	aCollection do: [ :eModel |
-		self addEdge: eModel from: source to: target ]
-]
-
-{ #category : #'building - graph' }
-NetworkGraph >> edges: aCollection from: source to: target weight: weightFunction [
-
-	| edge |
-	aCollection do: [ :eModel |
-		edge := self addEdge: eModel from: source to: target.
-		edge ifNotNil: [ edge weight: (weightFunction value: eModel) ] ]
-]
-
-{ #category : #'building - graph' }
-NetworkGraph >> edges: aCollection from: source toAll: targets [
-
-	aCollection do: [ :eModel |
-		(targets value: eModel) do: [ :target |
-			self
-				addEdge: {
-						(source value: eModel).
-						target }
-				from: [ :each | each first ]
-				to: [ :each | each second ] ] ]
-]
-
-{ #category : #'building - graph' }
-NetworkGraph >> edgesByPair: aCollection [
-
-	" aCollection must be a collection where the incoming edge has to be in the first position and the outgoing esge has to be in the second position.
-
-	You can use this method instead of doing
-	edge: aCollection from: #first to: #second"
-	aCollection do: [ :eModel |
-		self addEdge: eModel
-		from: [ :each | each first ]
-		to: [ :each | each second ] ]
-]
-
-{ #category : #'building - graph' }
 NetworkGraph >> emptyGraph [
 
 	edges := edges copyEmpty.
 	nodes := nodes copyEmpty
-]
-
-{ #category : #private }
-NetworkGraph >> findBinaryBlock: aModel [
-
-	"New implementation of the algos to have better performances to find nodes. The nodes and edges are sorted from low to high according to their has number."
-
-	^ [ :aNode | aModel hash - aNode model hash ]
 ]
 
 { #category : #accessing }
