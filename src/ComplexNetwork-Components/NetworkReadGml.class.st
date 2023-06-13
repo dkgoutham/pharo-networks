@@ -103,6 +103,32 @@ NetworkReadGml >> readFromUrl: url [
 ]
 
 { #category : #'as yet unclassified' }
+NetworkReadGml >> screateNode: fileStream graph: aGraph [
+
+	| line parts curNode |
+	line := fileStream nextLine.
+	line := line trim.
+	parts := self splitStringFirst: line.
+
+	[ parts first = ']' ] whileFalse: [
+		parts first = '[' ifTrue: [
+			line := fileStream nextLine.
+			line := line trim.
+			parts := self splitStringFirst: line ].
+		parts first = 'id' ifTrue: [
+			aGraph addNodeFor: parts second asInteger.
+			curNode := aGraph nodes last ].
+		parts first = 'id' ifFalse: [
+			| curAttribute |
+			curAttribute := NetworkAttribute new.
+			curAttribute setAttribute: parts first value: parts second.
+			curNode addAttribute: curAttribute ].
+		line := fileStream nextLine.
+		line := line trim.
+		parts := self splitStringFirst: line ]
+]
+
+{ #category : #'as yet unclassified' }
 NetworkReadGml >> splitStringFirst: aString [
 
 	| parts last |
