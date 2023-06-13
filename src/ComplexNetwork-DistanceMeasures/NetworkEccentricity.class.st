@@ -20,11 +20,12 @@ NetworkEccentricity >> findEccentricity: aGraph node: aNode [
 
 	[ queue isNotEmpty ] whileTrue: [
 		node := queue removeFirst.
-		node adjacentEdges do: [ :currentNode |
+		node adjacentNodes do: [ :currentNode |
 			(distance at: currentNode id) = -1 ifTrue: [
 				distance at: currentNode id put: (distance at: node id) + 1.
 				queue addLast: currentNode ] ] ].
-	eccentricity := distance min.
+	eccentricity := distance max.
+	eccentricity = 0 ifTrue: [ eccentricity := Float infinity ].
 	^ eccentricity
 ]
 
@@ -36,4 +37,14 @@ NetworkEccentricity >> findEccentricityAll: aGraph [
 		                  self findEccentricity: aGraph node: node ].
 
 	^ eccentricities
+]
+
+{ #category : #'as yet unclassified' }
+NetworkEccentricity >> findEccentricityById: aGraph id: anId [
+
+	| eccentricity node |
+	node := aGraph findNode: anId.
+	eccentricity := self findEccentricity: aGraph node: node.
+
+	^ eccentricity
 ]

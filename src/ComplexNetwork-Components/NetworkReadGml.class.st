@@ -20,18 +20,18 @@ NetworkReadGml >> createEdge: fileStream graph: aGraph [
 		line := line trim.
 		parts := self splitStringFirst: line ].
 
-	sourceId := parts second.
+	sourceId := parts second asInteger.
 
 	line := fileStream nextLine.
 	line := line trim.
 	parts := self splitStringFirst: line.
 
-	targetId := parts second.
+	targetId := parts second asInteger.
 
 	aGraph directed ifTrue: [
 		aGraph addDirectedEdge: sourceId to: targetId.
 		curEdge := aGraph edges last ].
-	
+
 	aGraph directed ifFalse: [
 		aGraph addUndirectedEdge: sourceId to: targetId.
 		curEdge := aGraph edges last ].
@@ -64,7 +64,7 @@ NetworkReadGml >> createNode: fileStream graph: aGraph [
 			line := line trim.
 			parts := self splitStringFirst: line ].
 		parts first = 'id' ifTrue: [
-			aGraph addNodeFor: parts second.
+			aGraph addNodeFor: parts second asInteger.
 			curNode := aGraph nodes last ].
 		parts first = 'id' ifFalse: [
 			| curAttribute |
@@ -89,9 +89,11 @@ NetworkReadGml >> readFromUrl: url [
 		| line parts |
 		line := fileStream nextLine.
 		line := line trim.
-		"Transcript show: line;cr."
-		"parts := line split: ' '."
 		parts := self stringSplitSpace: line.
+		parts isEmpty ifTrue: [
+			line := fileStream nextLine.
+			line := line trim.
+			parts := self stringSplitSpace: line ].
 		parts first = 'directed' ifTrue: [
 			graph directed: parts second = '1' ].
 
@@ -99,6 +101,8 @@ NetworkReadGml >> readFromUrl: url [
 			self createNode: fileStream graph: graph ].
 		parts first = 'edge' ifTrue: [ "Create edge"
 			self createEdge: fileStream graph: graph ] ].
+	graph nodes first id = 0 ifTrue: [
+		graph nodes do: [ :n | n id: n id + 1 ] ].
 	^ graph
 ]
 

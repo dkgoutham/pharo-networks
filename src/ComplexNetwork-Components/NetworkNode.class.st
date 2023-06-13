@@ -64,9 +64,9 @@ NetworkNode >> id [
 ]
 
 { #category : #accessing }
-NetworkNode >> id: aId [
+NetworkNode >> id: anId [
 
-	id := aId
+	id := anId
 ]
 
 { #category : #initialization }
